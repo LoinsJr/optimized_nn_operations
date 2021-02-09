@@ -5,7 +5,7 @@ on:
 
 jobs:
   test_program:
-    runs-on: windows-x64
+    runs-on: windows-latest
     steps:
       - name: Clone repository to docker
         uses: actions/checkout@main
