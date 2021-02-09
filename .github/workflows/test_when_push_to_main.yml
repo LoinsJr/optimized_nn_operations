@@ -5,15 +5,11 @@ on:
 
 jobs:
   test_program:
-    runs-on: windows-latest
+    runs-on: windows-x64
     steps:
-      #- name: Clone repository to docker
-      #  uses: actions/checkout@main
-      #- name: Build tests
-      #  run: make build_tests
-      - name: Show files
-        run: |
-          cd D:\a
-          dir
-      #- name: Run tests
-      #  run: tests.exe
+      - name: Clone repository to docker
+        uses: actions/checkout@main
+      - name: Build tests
+        run: make build_tests
+      - name: Run tests
+        run: tests.exe
