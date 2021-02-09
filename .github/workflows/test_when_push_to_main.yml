@@ -8,6 +8,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Clone repository to docker
-        run: actions/checkout@v1
+        uses: actions/checkout@main
       - name: Build tests
         run: make build_tests
+      - name: Run tests
+        run: tests\tests.exe
