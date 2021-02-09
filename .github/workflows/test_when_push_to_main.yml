@@ -9,7 +9,9 @@ jobs:
     steps:
       - name: Clone repository to docker
         uses: actions/checkout@main
+        
       - name: Build tests
         run: make build_tests
+        
       - name: Run tests
         run: tests.exe
