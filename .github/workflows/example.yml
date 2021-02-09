@@ -1,0 +1,12 @@
+name: my-actions-example
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  job2:
+    runs-on: windows-latest
+    steps:
+    - name: Print Hello World
+      run: echo Hello World
