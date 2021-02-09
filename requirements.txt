@@ -1,0 +1,5 @@
+1) Fused operations
+2) Invariants are placed in memory
+3) Unrolled loops, - dependency chain
+4) - domain stall
+5) Use 32-bit register when its available
