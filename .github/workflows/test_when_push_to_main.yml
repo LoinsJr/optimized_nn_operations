@@ -12,4 +12,4 @@ jobs:
       - name: Build tests
         run: make build_tests
       - name: Run tests
-        run: tests\tests.exe
+        run: tests.exe

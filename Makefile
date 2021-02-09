@@ -34,4 +34,4 @@ build_tests: obj/buffers_management.o $(ASM_OBJS) obj/tests.o
 	g++ -m64 $^ -lgtest -lgtest_main -o tests/tests.exe
 
 clean:
-	del obj\*.o *.exe
+	del *.exe
