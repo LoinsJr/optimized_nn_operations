@@ -1,5 +1,5 @@
 #include "../src/buffers_management.hpp"
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 #include <iostream>
 
 extern "C" void mtrx_mul(float *src_matrix1, uint32_t src_matrix1_h, uint32_t src_matrix1_w,

@@ -8,7 +8,7 @@ tests: tests.exe
 	tests.exe
 
 tests.exe: obj/buffers_management.o $(ASM_OBJS) obj/tests.o
-	g++ -m64 $^ -lgtest -lgtest_main -o $@
+	g++ -m64 $^ lib/libgtest.a lib/libgtest_main.a -o $@
 
 prog.exe: obj/buffers_management.o $(ASM_OBJS) obj/main.o
 	g++ -m64 $^ -o $@
@@ -31,7 +31,7 @@ build_prog: obj/buffers_management.o $(ASM_OBJS) obj/main.o
 	g++ -m64 $^ -o prog.exe
 
 build_tests: obj/buffers_management.o $(ASM_OBJS) obj/tests.o
-	g++ -m64 $^ -lgtest -lgtest_main -o tests/tests.exe
+	g++ -m64 $^ lib/libgtest.a lib/libgtest_main.a -o tests/tests.exe
 
 clean:
 	del *.exe
