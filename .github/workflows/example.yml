@@ -8,18 +8,17 @@ on:
     branches: [ main ]
 
 jobs:
-  job1:
+  job:
     runs-on: windows-latest
     steps:
-    - name: Print Hi
-      run: echo Hello World
+      - name: Show files
+        run: dir
+      - name: Clone my repository
+        uses: actions/checkout@v1
+      - name: Show files now
+        run: dir
   job2:
     runs-on: windows-latest
-    needs: [job1]
     steps:
-    - name: Print Hello World
-      run: echo Hello World
-    - name: Print github.sha
-      run: |
-        echo Hello World
-        echo ${{ env.GITHUB_SHA }}
+      - name: Test make availability
+        run: make --version
