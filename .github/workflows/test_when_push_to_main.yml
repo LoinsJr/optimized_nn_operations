@@ -7,13 +7,13 @@ jobs:
   test_program:
     runs-on: windows-latest
     steps:
-      - name: Clone repository to docker
-        uses: actions/checkout@main
-      - name: Build tests
-        run: make build_tests
+      #- name: Clone repository to docker
+      #  uses: actions/checkout@main
+      #- name: Build tests
+      #  run: make build_tests
       - name: Show files
         run: |
-          cd /d C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise
+          cd /d C:\
           dir
-      - name: Run tests
-        run: tests.exe
+      #- name: Run tests
+      #  run: tests.exe
