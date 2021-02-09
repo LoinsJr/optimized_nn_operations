@@ -5,8 +5,14 @@ on:
     branches: [ main ]
 
 jobs:
+  job1:
+    runs-on: windows-latest
+    steps:
+    - name: Print Hi
+      run: echo Hello World
   job2:
     runs-on: windows-latest
+    needs: [job1]
     steps:
     - name: Print Hello World
       run: echo Hello World
