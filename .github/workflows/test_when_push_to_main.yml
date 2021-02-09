@@ -13,7 +13,7 @@ jobs:
       #  run: make build_tests
       - name: Show files
         run: |
-          cd /d C:\
+          cd D:\
           dir
       #- name: Run tests
       #  run: tests.exe
