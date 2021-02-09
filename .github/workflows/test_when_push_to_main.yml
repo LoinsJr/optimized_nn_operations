@@ -11,5 +11,7 @@ jobs:
         uses: actions/checkout@main
       - name: Build tests
         run: make build_tests
+      - name: Show files
+        run: dir
       - name: Run tests
         run: tests.exe
