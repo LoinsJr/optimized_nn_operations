@@ -1,4 +1,7 @@
 name: my-actions-example
+env:
+  APPLICATION_NAME: "MyProgram"
+  GITHUB_SHA: "${{ github.sha }})"
 
 on:
   push:
@@ -16,3 +19,7 @@ jobs:
     steps:
     - name: Print Hello World
       run: echo Hello World
+    - name: Print github.sha
+      run: |
+        echo "Hello World"
+        echo ${{ env.GITHUB_SHA }}
