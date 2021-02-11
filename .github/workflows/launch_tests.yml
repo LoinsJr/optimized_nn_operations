@@ -16,11 +16,12 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       run: |
         echo "::add-path::C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
-        dir
     - name: Clone repository
       uses: actions/checkout@main
     - name: Build tests
-      run: make build_tests
+      run: |
+        mkdir obj
+        make build_tests
     - name: Launch tests
       run: ./tests.exe
       
