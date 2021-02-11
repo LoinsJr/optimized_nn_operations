@@ -13,7 +13,7 @@ jobs:
     steps:
     - name: checkC
       run: |
-        cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise"
+        cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\"
         dir
       
       
