@@ -1,5 +1,5 @@
 name: try-workflow
-ACTIONS_ALLOW_UNSECURE
+
 on:
   push:
     branches: [ main ]
