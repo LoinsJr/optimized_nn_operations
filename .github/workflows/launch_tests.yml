@@ -11,9 +11,11 @@ jobs:
 
     runs-on: windows-latest
     steps:
+    - name: Check ml64.exe
+      run: |
+        cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
+        dir
     - name: Set PATH to ml64.exe
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       run: echo "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64" >> $GITHUB_PATH
     - name: Check PATH
       run: echo $GITHUB_PATH
