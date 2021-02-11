@@ -17,7 +17,7 @@ jobs:
         dir
         env
     - name: Set PATH to ml64.exe
-      run: echo "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64" >> $GITHUB_PATH
+      run: echo "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64" >> $PATH
     - name: Check PATH
       run: echo $GITHUB_PATH
     - name: Clone repository
@@ -25,7 +25,7 @@ jobs:
     - name: Build tests
       run: |
         mkdir obj
-        make build_tests ASMC="ml64.exe"
+        make build_tests
     - name: Launch tests
       run: ./tests.exe
       
