@@ -42,10 +42,13 @@ fill_buffer_8_loop_head:
     lea    rax,    [rax + 64]              ; 4 B
     lea    r10,    [r10 + rbx]
     sub    esi,    2                       ; 4 B
-    jne    fill_buffer_8_loop_head
+    jae    fill_buffer_8_loop_head
 fill_last_row:
+    cmp    esi,    -2
+    je     exit
     vmovaps        ymm2,   [r10]
     vmovaps        [rax],  ymm2
+exit:
     ret
 fill_buffer_8 endp
 
@@ -231,6 +234,127 @@ count_kernel_1x16_loop_head:
     ret
 count_kernel_1x16 endp
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; void count_kernel_6x8(float *src_matrix1 = R10, uint32_t src_matrix1_w = ESI, uint32_t src_matrix1_w_real = R11D,  ;;
+;;                         float *src_buffer = R12, uint32_t src_matrix2_w_real = EBX, float *dst_matrix = R13)       ;;
+;; Uses RAX                                                                                                           ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+count_kernel_6x8 proc
+    vxorps ymm0,   ymm0,   ymm0
+    vxorps ymm1,   ymm1,   ymm1
+    vxorps ymm2,   ymm2,   ymm2
+    vxorps ymm3,   ymm3,   ymm3
+    vxorps ymm4,   ymm4,   ymm4
+    vxorps ymm5,   ymm5,   ymm5
+    mov    rax,    r10
+count_kernel_6x8_loop_head:
+    vmovaps        ymm9,   [r12]
+    vbroadcastss   ymm8,   dword ptr [r10]
+    add    rax,    4
+    vfmadd231ps    ymm0,   ymm8,  ymm9
+    lea    r10,    [r10 + r11]
+    vbroadcastss   ymm10,  dword ptr [r10]
+    vbroadcastss   ymm11,  dword ptr [r10 + r11]
+    vfmadd231ps    ymm1,   ymm10, ymm9
+    vfmadd231ps    ymm2,   ymm11, ymm9
+    lea    r10,    [r10 + 2 * r11]
+    vbroadcastss   ymm12,  dword ptr [r10]
+    vbroadcastss   ymm13,  dword ptr [r10 + r11]
+    vfmadd231ps    ymm3,   ymm12, ymm9
+    vfmadd231ps    ymm4,   ymm13, ymm9
+    lea    r10,    [r10 + 2 * r11]
+    vbroadcastss   ymm10,  dword ptr [r10]
+    vfmadd231ps    ymm5,   ymm10, ymm9
+    mov    r10,    rax
+    lea    r12,    [r12 + 32]
+    sub    esi,    1
+    jne    count_kernel_6x8_loop_head
+    vmovaps        [r13], ymm0
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm1
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm2
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm3
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm4
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm5
+    lea    r13,    [r13 + rbx]
+    ret
+count_kernel_6x8 endp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; void count_kernel_4x8(float *src_matrix1 = R10, uint32_t src_matrix1_w = ESI, uint32_t src_matrix1_w_real = R11D,  ;;
+;;                         float *src_buffer = R12, uint32_t src_matrix2_w_real = EBX, float *dst_matrix = R13)       ;;
+;; Uses RAX                                                                                                           ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+count_kernel_4x8 proc
+    vxorps ymm0,   ymm0,   ymm0
+    vxorps ymm1,   ymm1,   ymm1
+    vxorps ymm2,   ymm2,   ymm2
+    vxorps ymm3,   ymm3,   ymm3
+    mov    rax,    r10
+count_kernel_4x8_loop_head:
+    vmovaps        ymm9,   [r12]
+    vbroadcastss   ymm8,   dword ptr [r10]
+    add    rax,    4
+    vfmadd231ps    ymm0,   ymm8,  ymm9
+    lea    r10,    [r10 + r11]
+    vbroadcastss   ymm10,  dword ptr [r10]
+    vbroadcastss   ymm11,  dword ptr [r10 + r11]
+    vfmadd231ps    ymm1,   ymm10, ymm9
+    vfmadd231ps    ymm2,   ymm11, ymm9
+    lea    r10,    [r10 + 2 * r11]
+    vbroadcastss   ymm12,  dword ptr [r10]
+    vfmadd231ps    ymm3,   ymm12, ymm9
+    mov    r10,    rax
+    lea    r12,    [r12 + 32]
+    sub    esi,    1
+    jne    count_kernel_4x8_loop_head
+    vmovaps        [r13], ymm0
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm1
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm2
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm3
+    lea    r13,    [r13 + rbx]
+    ret
+count_kernel_4x8 endp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; void count_kernel_2x8(float *src_matrix1 = R10, uint32_t src_matrix1_w = ESI, uint32_t src_matrix1_w_real = R11D,  ;;
+;;                         float *src_buffer = R12, uint32_t src_matrix2_w_real = EBX, float *dst_matrix = R13)       ;;
+;; Uses RAX                                                                                                           ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+count_kernel_2x8 proc
+    vxorps ymm0,   ymm0,   ymm0
+    vxorps ymm1,   ymm1,   ymm1
+    mov    rax,    r10
+count_kernel_2x8_loop_head:
+    vmovaps        ymm9,   [r12]
+    vbroadcastss   ymm8,   dword ptr [r10]
+    add    rax,    4
+    vfmadd231ps    ymm0,   ymm8,  ymm9
+    lea    r10,    [r10 + r11]
+    vbroadcastss   ymm10,  dword ptr [r10]
+    vfmadd231ps    ymm1,   ymm10, ymm9
+    mov    r10,    rax
+    lea    r12,    [r12 + 32]
+    sub    esi,    1
+    jne    count_kernel_2x8_loop_head
+    vmovaps        [r13], ymm0
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm1
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm2
+    lea    r13,    [r13 + rbx]
+    vmovaps        [r13], ymm3
+    lea    r13,    [r13 + rbx]
+    ret
+count_kernel_2x8 endp
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; void mtrx_mul(float *src_matrix1, uint32_t src_matrix1_h, uint32_t src_matrix1_w, ;;
 ;;                 float *src_matrix2, uint32_t src_matrix2_w, float *dst_matrix)    ;;
@@ -250,7 +374,6 @@ mtrx_mul proc
     mov    [rbp + 24],     edx     ; 3 B
     mov    ebx,    [rbp + 48]      ; 3 B
     mov    edx,    r8d             ; 3 B
-    mov    esi,    r8d             ; 3 B
     add    r8d,    7               ; 4 B
     add    ebx,    7               ; 3 B
     mov    r15,    [rbp + 56]      ; 4 B
@@ -318,11 +441,49 @@ next_16:
     sub    ecx,    64              ; 3 B
     jae    loop_head_w2            ;
 kernels_Yx8:
-    ;mov    rax,    buffer          ; 7 B
-    ;mov    r10,    r9              ; 3 B
-    ;mov    esi,    edx             ; 2 B
-    ;call   fill_buffer_8
-    ;mov    edi,    [rbp + 24]
+    cmp    ecx,    -64
+    je     exit
+    mov    rax,    buffer          ; 7 B
+    mov    r10,    r9              ; 3 B
+    mov    esi,    edx             ; 2 B
+    call   fill_buffer_8
+    mov    edi,    [rbp + 24]
+    mov    r14,    r8
+    mov    r13,    r15
+    add    r15,    64
+    sub    edi,    6
+    jb     kernel_4x8
+loop_head_h1_6x8:
+    mov    r12,    buffer
+    mov    r10,    r14
+    mov    esi,    edx
+    lea    r14,    [r14 + 4 * r11]
+    lea    r14,    [r14 + 2 * r11]
+    call   count_kernel_6x8
+    sub    edi,    6
+    jae    loop_head_h1_6x8
+kernel_4x8:
+    cmp    edi,    -2
+    jne    kernel_2x8
+    mov    r10,    r14
+    mov    esi,    edx
+    lea    r14,    [r14 + 4 * r11]
+    call   count_kernel_4x8
+kernel_2x8:
+    test   edi,    2
+    jnz    kernel_1x8
+    mov    r12,    buffer
+    mov    r10,    r14
+    mov    esi,    edx
+    lea    r14,    [r14 + 2 * r11]
+    call   count_kernel_2x8
+kernel_1x8:
+    test   edi,    1
+    jz     exit
+    mov    r12,    buffer
+    mov    r10,    r14
+    mov    esi,    edx
+    ;call   count_kernel_1x8
 exit:
     pop_callee_saved_regs
     leave
