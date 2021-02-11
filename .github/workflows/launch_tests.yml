@@ -15,11 +15,10 @@ jobs:
       run: |
         cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
         dir
-        env
     - name: Set PATH to ml64.exe
-      run: echo "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64" >> $PATH
+      run: echo ":/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64" >> $PATH
     - name: Check PATH
-      run: echo $GITHUB_PATH
+      run: env
     - name: Clone repository
       uses: actions/checkout@main
     - name: Build tests
