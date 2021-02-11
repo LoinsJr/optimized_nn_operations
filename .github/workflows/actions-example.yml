@@ -13,8 +13,7 @@ jobs:
     steps:
     - name: checkC
       run: |
-        cd /d C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise
+        cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise"
         dir
-      shell: cmd
       
       
