@@ -14,15 +14,15 @@ jobs:
     - name: Set PATH to ml64.exe
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-      run: echo "::add-path::C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
-    - name: HHH
-      run: where ml64.exe
+      run: echo "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64" >> $GITHUB_PATH
+    - name: Check PATH
+      run: echo "$PATH"
     - name: Clone repository
       uses: actions/checkout@main
     - name: Build tests
       run: |
         mkdir obj
-        make build_tests ASMC="C:/Program Files \(x86\)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64/ml64.exe"
+        make build_tests
     - name: Launch tests
       run: ./tests.exe
       
