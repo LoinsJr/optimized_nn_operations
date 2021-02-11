@@ -1,0 +1,23 @@
+name: try-workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: configure
+      run: ./configure
+    - name: checkC
+      run: |
+        cd /d C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise
+        dir
+      
+      
