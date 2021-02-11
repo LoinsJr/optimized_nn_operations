@@ -12,8 +12,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: configure
     - name: checkC
       run: |
         cd /d C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise
