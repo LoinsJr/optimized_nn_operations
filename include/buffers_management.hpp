@@ -1,5 +1,5 @@
 #pragma once
-#define MAX_MATRICIES_AMOUNT 6
+#define MAX_MATRICIES_AMOUNT 7
 
 #include <cinttypes>
 

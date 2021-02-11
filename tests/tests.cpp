@@ -10,73 +10,97 @@ namespace
     const uint32_t MAX_SIZE = 24;
     float *buffer;
     float *matrix1, *matrix2, *matrix3, *matrix4, *matrix5, *matrix6;
-    
-    void trivial_mtrx_mul(float *m1, uint32_t height1, uint32_t width1, float *m2,
-                            uint32_t width2, float *m3)
-    {
-        for (uint32_t i = 0; i < height1; ++i) {
-            for (uint32_t j = 0; j < width2; ++j) {
-                for (uint32_t k = 0; k < width1; ++k) {
-                    matrix3[i * width2 + j] += matrix1[i * width1 + k] * matrix2[k * width2 + j];
-                }
-            }
-        }
-    }
-    void fill_matricies()
-    {
-        for (uint32_t i = 0; i < MAX_SIZE; ++i) {
-            for (uint32_t j = 0; j < MAX_SIZE; ++j) {
-                matrix1[i * MAX_SIZE + j] = rand() % 3 / 2.0;
-                matrix2[i * MAX_SIZE + j] = rand() % 3 / 2.0;
-                matrix3[i * MAX_SIZE + j] = matrix4[i * MAX_SIZE + j] = 0;
-            }
-        }
-    }
 
     TEST(MTRX_MUL, TEST_16x16)
     {
-        uint32_t size = 16;
-        ASSERT_LT(size, MAX_SIZE);
-        fill_matricies();
-        trivial_mtrx_mul(matrix1, size, size, matrix2, size, matrix3);
-        mtrx_mul(matrix1, size, size, matrix2, size, matrix4);
-        for (uint32_t i = 0; i < size; ++i) {
-            for (uint32_t j = 0; j < size; ++j) {
-                ASSERT_FLOAT_EQ(matrix3[i * size + j], matrix4[i * size + j]);
+        ASSERT_LT(16 * 16, MAX_SIZE * MAX_SIZE);
+        for (int i = 0; i < 16 * 16; ++i) {
+            matrix1[i] = rand() % 3 / 2.0;
+            matrix2[i] = rand() % 3 / 2.0;
+        }
+        mtrx_mul(matrix1, 16, 16, matrix2, 16, matrix3);
+        for (int i = 0; i < 16; ++i) {
+            for (int j = 0; j < 16; ++j) {
+                float res = 0;
+                for (int k = 0; k < 16; ++k) {
+                    res += matrix1[i * 16 + k] * matrix2[k * 16 + j];
+                }
+                ASSERT_FLOAT_EQ(matrix3[i * 16 + j], res);
             }
         }
     }
 
-    TEST(MTRX_MUL, TEST_19x16_16x16)
+    TEST(MTRX_MUL, TEST_22x11_11x16)
     {
-        uint32_t size1 = 19, size2 = 16;
-        ASSERT_LT(size1 * size2, MAX_SIZE * MAX_SIZE);
-        fill_matricies();
-        trivial_mtrx_mul(matrix1, size1, size2, matrix2, size2, matrix3);
-        mtrx_mul(matrix1, size1, size2, matrix2, size2, matrix4);
-        for (uint32_t i = 0; i < size1; ++i) {
-            for (uint32_t j = 0; j < size2; ++j) {
-                ASSERT_FLOAT_EQ(matrix3[i * size2 + j], matrix4[i * size2 + j]);
+        ASSERT_LT(22 * 11, MAX_SIZE * MAX_SIZE);
+        for (int i = 0; i < 22; ++i) {
+            for (int j = 0; j < 11; ++j) {
+                matrix1[i * 16 + j] = rand() % 3 / 2.0;
+            }
+        }
+        for (int i = 0; i < 11; ++i) {
+            for (int j = 0; j < 16; ++j) {
+                matrix1[i * 16 + j] = rand() % 3 / 2.0;
+            }
+        }
+        mtrx_mul(matrix1, 22, 11, matrix2, 16, matrix3);
+        for (int i = 0; i < 22; ++i) {
+            for (int j = 0; j < 16; ++j) {
+                float res = 0;
+                for (int k = 0; k < 11; ++k) {
+                    res += matrix1[i * 16 + k] * matrix2[k * 16 + j];
+                }
+                ASSERT_FLOAT_EQ(matrix3[i * 16 + j], res);
             }
         }
     }
 
-    TEST(MTRX_MUL, TEST_18x17_17x18)
+    TEST(MTRX_MUL, TEST_17x12_12x18)
     {
-        uint32_t size1 = 17, size2 = 18, size2_multiply_of_8 = 24;
-        ASSERT_LT(size1 * size2, MAX_SIZE * MAX_SIZE);
-        fill_matricies();
-        float *matrix2_ptr = matrix2;
-        for (uint32_t i = 0; i < size1; ++i) {
-            for (uint32_t j = 0; j < size2; ++j) {
-                matrix5[i * size2_multiply_of_8 + j] = *matrix2_ptr++;
+        ASSERT_LT(12 * 18, MAX_SIZE * MAX_SIZE);
+        for (int i = 0; i < 17; ++i) {
+            for (int j = 0; j < 12; ++j) {
+                matrix1[i * 16 + j] = rand() % 3 / 2.0;
             }
         }
-        trivial_mtrx_mul(matrix1, size1, size2, matrix2, size1, matrix3);
-        mtrx_mul(matrix1, size1, size2, matrix5, size1, matrix4);
-        for (uint32_t i = 0; i < size1; ++i) {
-            for (uint32_t j = 0; j < size2; ++j) {
-                ASSERT_FLOAT_EQ(matrix3[i * size2 + j], matrix5[i * size2_multiply_of_8 + j]);
+        for (int i = 0; i < 12; ++i) {
+            for (int j = 0; j < 18; ++j) {
+                matrix2[i * 24 + j] = rand() % 3 / 2.0;
+            }
+        }
+        mtrx_mul(matrix1, 17, 12, matrix2, 18, matrix3);
+        for (int i = 0; i < 17; ++i) {
+            for (int j = 0; j < 18; ++j) {
+                float res = 0;
+                for (int k = 0; k < 12; ++k) {
+                    res += matrix1[i * 16 + k] * matrix2[k * 24 + j];
+                }
+                ASSERT_FLOAT_EQ(matrix3[i * 24 + j], res);
+            }
+        }
+    }
+
+    TEST(MTRX_MUL, TEST_15x12_12x23)
+    {
+        ASSERT_LT(12 * 23, MAX_SIZE * MAX_SIZE);
+        for (int i = 0; i < 15; ++i) {
+            for (int j = 0; j < 12; ++j) {
+                matrix1[i * 16 + j] = rand() % 3 / 2.0;
+            }
+        }
+        for (int i = 0; i < 12; ++i) {
+            for (int j = 0; j < 23; ++j) {
+                matrix2[i * 24 + j] = rand() % 3 / 2.0;
+            }
+        }
+        mtrx_mul(matrix1, 15, 12, matrix2, 23, matrix3);
+        for (int i = 0; i < 15; ++i) {
+            for (int j = 0; j < 23; ++j) {
+                float res = 0;
+                for (int k = 0; k < 12; ++k) {
+                    res += matrix1[i * 16 + k] * matrix2[k * 24 + j];
+                }
+                ASSERT_FLOAT_EQ(matrix3[i * 24 + j], res);
             }
         }
     }
@@ -84,7 +108,7 @@ namespace
 
 int main(int argc, char **argv)
 {
-    auto matricies = allocate_float_matricies(6, 32, MAX_SIZE);
+    auto matricies = allocate_float_matricies(7, 32, MAX_SIZE * MAX_SIZE);
     matrix1 = matricies[0];
     matrix2 = matricies[1];
     matrix3 = matricies[2];

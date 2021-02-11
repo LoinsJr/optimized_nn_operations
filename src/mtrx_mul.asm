@@ -348,12 +348,31 @@ count_kernel_2x8_loop_head:
     lea    r13,    [r13 + rbx]
     vmovaps        [r13], ymm1
     lea    r13,    [r13 + rbx]
-    vmovaps        [r13], ymm2
-    lea    r13,    [r13 + rbx]
-    vmovaps        [r13], ymm3
-    lea    r13,    [r13 + rbx]
     ret
 count_kernel_2x8 endp
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; void count_kernel_1x8(float *src_matrix1 = R10, uint32_t src_matrix1_w = ESI, uint32_t src_matrix1_w_real = R11D,  ;;
+;;                         float *src_buffer = R12, uint32_t src_matrix2_w_real = EBX, float *dst_matrix = R13)       ;;
+;; Uses RAX                                                                                                           ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+count_kernel_1x8 proc
+    vxorps ymm0,   ymm0,   ymm0
+    vxorps ymm1,   ymm1,   ymm1
+    mov    rax,    r10
+count_kernel_1x8_loop_head:
+    vmovaps        ymm9,   [r12]
+    vbroadcastss   ymm8,   dword ptr [r10]
+    add    rax,    4
+    vfmadd231ps    ymm0,   ymm8,  ymm9
+    mov    r10,    rax
+    lea    r12,    [r12 + 32]
+    sub    esi,    1
+    jne    count_kernel_1x8_loop_head
+    vmovaps        [r13], ymm0
+    lea    r13,    [r13 + rbx]
+    ret
+count_kernel_1x8 endp
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; void mtrx_mul(float *src_matrix1, uint32_t src_matrix1_h, uint32_t src_matrix1_w, ;;
@@ -450,7 +469,6 @@ kernels_Yx8:
     mov    edi,    [rbp + 24]
     mov    r14,    r8
     mov    r13,    r15
-    add    r15,    64
     sub    edi,    6
     jb     kernel_4x8
 loop_head_h1_6x8:
@@ -464,7 +482,8 @@ loop_head_h1_6x8:
     jae    loop_head_h1_6x8
 kernel_4x8:
     cmp    edi,    -2
-    jne    kernel_2x8
+    jl     kernel_2x8
+    mov    r12,    buffer
     mov    r10,    r14
     mov    esi,    edx
     lea    r14,    [r14 + 4 * r11]
@@ -483,7 +502,7 @@ kernel_1x8:
     mov    r12,    buffer
     mov    r10,    r14
     mov    esi,    edx
-    ;call   count_kernel_1x8
+    call   count_kernel_1x8
 exit:
     pop_callee_saved_regs
     leave
