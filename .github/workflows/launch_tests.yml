@@ -24,7 +24,7 @@ jobs:
     - name: Build tests
       run: |
         mkdir obj
-        make build_tests
+        make build_tests ASMC="ml64.exe"
     - name: Launch tests
       run: ./tests.exe
       
