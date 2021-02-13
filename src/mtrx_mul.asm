@@ -58,68 +58,62 @@ fill_buffer_8 endp
 ;; Uses RAX                                                                                                           ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 count_kernel_6x16 proc
-    vxorps ymm0,   ymm0,   ymm0
-    vxorps ymm1,   ymm1,   ymm1
-    vxorps ymm2,   ymm2,   ymm2
-    vxorps ymm3,   ymm3,   ymm3
-    vxorps ymm4,   ymm4,   ymm4
-    vxorps ymm5,   ymm5,   ymm5
-    vxorps ymm6,   ymm6,   ymm6
-    vxorps ymm7,   ymm7,   ymm7
-    vxorps ymm8,   ymm8,   ymm8
-    vxorps ymm9,   ymm9,   ymm9
-    vxorps ymm10,  ymm10,  ymm10
-    vxorps ymm11,  ymm11,  ymm11
-    mov    rax,    r10
+    mov    rax,    r10                     ; 3 B
+    vxorps ymm0,   ymm0,   ymm0            ; 4 B
+    vxorps ymm1,   ymm1,   ymm1            ; 4 B
+    vxorps ymm2,   ymm2,   ymm2            ; 4 B
+    vxorps ymm3,   ymm3,   ymm3            ; 4 B
+    vxorps ymm4,   ymm4,   ymm4            ; 4 B
+    vxorps ymm5,   ymm5,   ymm5            ; 4 B
+    vxorps ymm6,   ymm6,   ymm6            ; 4 B
+    vxorps ymm7,   ymm7,   ymm7            ; 3 B
+    vxorps ymm8,   ymm8,   ymm8            ; 6 B
+    vxorps ymm9,   ymm9,   ymm9            ; 7 B
+    vxorps ymm10,  ymm10,  ymm10           ; 4 B
+    vxorps ymm11,  ymm11,  ymm11           ; 5 B
 count_kernel_6x16_loop_head:
-    vmovaps        ymm13,  [r12]
-    vmovaps        ymm14,  [r12 + 32]
-    lea    rax,    [rax + 4]
-    vbroadcastss   ymm12,   dword ptr [r10]
-    add    r10,    r11
-    vfmadd231ps    ymm0,  ymm12, ymm13
-    vfmadd231ps    ymm1,  ymm12, ymm14
-    vbroadcastss   ymm15, dword ptr [r10]
-    lea    r10,    [r10 + r11]
-    vfmadd231ps    ymm2,  ymm15, ymm13
-    vfmadd231ps    ymm3,  ymm15, ymm14
-    vbroadcastss   ymm12, dword ptr [r10]
-    lea    r10,    [r10 + r11]
-    vfmadd231ps    ymm4,  ymm12, ymm13
-    vfmadd231ps    ymm5,  ymm12, ymm14
-    vbroadcastss   ymm15,  dword ptr [r10]
-    lea    r10,    [r10 + r11]
-    vfmadd231ps    ymm6,  ymm15, ymm13
-    vfmadd231ps    ymm7,  ymm15, ymm14
-    vbroadcastss   ymm12,  dword ptr [r10]
-    lea    r10,    [r10 + r11]
-    vfmadd231ps    ymm8,  ymm12, ymm13
-    vfmadd231ps    ymm9,  ymm12, ymm14
-    vbroadcastss   ymm15,  dword ptr [r10]
-    mov    r10,    rax
-    vfmadd231ps    ymm10, ymm15, ymm13
-    vfmadd231ps    ymm11, ymm15, ymm14
-    lea    r12,    [r12 + 64]
-    sub    esi,    1
-    jne    count_kernel_6x16_loop_head
-    vmovaps        [r13], ymm0
-    vmovaps        [r13 + 32],   ymm1
-    lea    r13,    [r13 + rbx]
-    vmovaps        [r13], ymm2
-    vmovaps        [r13 + 32],   ymm3
-    lea    r13,    [r13 + rbx]
-    vmovaps        [r13], ymm4
-    vmovaps        [r13 + 32],   ymm5
-    lea    r13,    [r13 + rbx]
-    vmovaps        [r13], ymm6
-    vmovaps        [r13 + 32],   ymm7
-    lea    r13,    [r13 + rbx]
-    vmovaps        [r13], ymm8
-    vmovaps        [r13 + 32],   ymm9
-    lea    r13,    [r13 + rbx]
-    vmovaps        [r13], ymm10
-    vmovaps        [r13 + 32],   ymm11
-    lea    r13,    [r13 + rbx]
+    vmovaps        ymm13,  [r12]           ; 5 B
+    vmovaps        ymm14,  [r12 + 32]      ; 5 B
+    vbroadcastss   ymm12,  dword ptr [r10] ; 4 B
+    vbroadcastss   ymm15,  dword ptr [r10 + r11] ; 5 B
+    vfmadd231ps    ymm0,   ymm12, ymm13    ; 5 B
+    vfmadd231ps    ymm1,   ymm12, ymm14    ; 5 B
+    vfmadd231ps    ymm2,   ymm15, ymm13    ; 5 B
+    vfmadd231ps    ymm3,   ymm15, ymm14    ; 5 B
+    lea    r10,    [r10 + 2 * r11]         ; 4 B
+    vbroadcastss   ymm12,  dword ptr [r10] ; 5 B
+    vbroadcastss   ymm15,  dword ptr [r10 + r11] ; 5 B ?
+    vfmadd231ps    ymm4,   ymm12, ymm13    ; 5 B
+    vfmadd231ps    ymm5,   ymm12, ymm14    ; 5 B
+    vfmadd231ps    ymm6,   ymm15, ymm13    ; 5 B
+    vfmadd231ps    ymm7,   ymm15, ymm14    ; 5 B
+    lea    r10,    [r10 + 2 * r11]         ; 4 B
+    vbroadcastss   ymm12,  dword ptr [r10] ; 5 B
+    vbroadcastss   ymm15,  dword ptr [r10 + r11] ; 5 B ?
+    vfmadd231ps    ymm8,   ymm12, ymm13    ; 5 B
+    vfmadd231ps    ymm9,   ymm12, ymm14    ; 5 B
+    vfmadd231ps    ymm10,  ymm15, ymm13    ; 5 B
+    vfmadd231ps    ymm11,  ymm15, ymm14    ; 5 B
+    lea    r10,    [rax + 4]               ; 4 B
+    add    r12,    64
+    ;lea    r12,    [r12 + 64]              ; 5 B
+    sub    esi,    1                       ; 4 B
+    jne    count_kernel_6x16_loop_head     ; 6 B
+    vmovaps        [r13],  ymm0            ; 6 B
+    vmovaps        [r13 + 32],   ymm1      ; 6 B
+    vmovaps        [r13 + rbx],  ymm2      ; 6 B
+    vmovaps        [r13 + rbx + 32],   ymm3 ; 6 B
+    lea    r13,    [r13 + 2 * rbx]         ; 5 B
+    vmovaps        [r13],  ymm4            ; 6 B
+    vmovaps        [r13 + 32],   ymm5      ; 6 B
+    vmovaps        [r13 + rbx],  ymm6      ; 6 B
+    vmovaps        [r13 + rbx + 32],   ymm7 ; 6 B
+    lea    r13,    [r13 + 2 * rbx]         ; 5 B
+    vmovaps        [r13],  ymm8            ; 6 B
+    vmovaps        [r13 + 32],   ymm9      ; 6 B
+    vmovaps        [r13 + rbx],  ymm10     ; 6 B
+    vmovaps        [r13 + rbx + 32],   ymm11 ; 6 B
+    lea    r13,    [r13 + 2 * rbx]         ; 5 B
     ret
 count_kernel_6x16 endp
 
@@ -402,7 +396,7 @@ mtrx_mul proc
     shl    ebx,    2               ; 3 B
     mov    r11d,   r8d             ; 3 B
     mov    r8,     rcx             ; 3 B
-    mov    ecx,    ebx             ; 3 B
+    mov    ecx,    ebx             ; 2 B
     ; R8 - src_matrix1
     ; R9 - src_matrix2
     ; [RBP + 24] - src_matrix1_h
@@ -410,31 +404,31 @@ mtrx_mul proc
     ; EBX - next multiply of 32 after 4 * src_matrix2_w (invariant)
     ; R11D - next multiply of 32 after 4 * src_matrix1_w (invariant)
     ; R15 - dst_matrix
-    sub    ecx,    64
-    jb     kernels_Yx8
+    sub    ecx,    64              ; 3 B
+    jb     kernels_Yx8             ; 5 B
 loop_head_w2:
     mov    rax,    buffer          ; 7 B
     mov    r10,    r9              ; 3 B
     mov    esi,    edx             ; 2 B
-    call   fill_buffer_16
-    mov    edi,    [rbp + 24]      ;
-    mov    r14,    r8              ; 
-    mov    r13,    r15             ; 
-    add    r15,    64              ; 
-    sub    edi,    6
-    jb     kernel_4x16
+    call   fill_buffer_16          ; 5 B
+    mov    edi,    [rbp + 24]      ; 3 B
+    mov    r14,    r8              ; 3 B
+    mov    r13,    r15             ; 3 B
+    add    r15,    64              ; 4 B
+    sub    edi,    6               ; 3 B
+    jb     kernel_4x16             ; 2 B
 loop_head_h1_6x16:
-    mov    r12,    buffer          ; 
+    mov    r12,    buffer          ; 7 B
     mov    r10,    r14             ; 3 B
-    mov    esi,    edx             ;
-    lea    r14,    [r14 + 4 * r11] ;
-    lea    r14,    [r14 + 2 * r11] ;
+    lea    r14,    [r14 + 4 * r11] ; 4 B
+    mov    esi,    edx             ; 2 B
     call   count_kernel_6x16
-    sub    edi,    6               ;
-    jae    loop_head_h1_6x16       ;
+    lea    r14,    [r14 + 2 * r11] ; 4 B
+    sub    edi,    6               ; 3 B
+    jae    loop_head_h1_6x16       ; 2 B
 kernel_4x16:
-    cmp    edi,    -2
-    jl     kernel_2x16
+    cmp    edi,    -2              ; 3 B
+    jl     kernel_2x16             ; 
     mov    r12,    buffer
     mov    r10,    r14
     mov    esi,    edx
