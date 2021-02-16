@@ -1,20 +1,31 @@
 ASM_SRCS = $(wildcard src/*.asm)
 ASM_OBJS = $(patsubst src/%.asm, obj/%.o, $(ASM_SRCS))
+TESTS_SRCS = $(wildcard tests/*.cpp)
+TESTS_OBJS = $(patsubst tests/%.cpp, obj/%.o, $(TESTS_SRCS))
+CXX = g++
 ASMC = ml64
-build_prog: obj/buffers_management.o $(ASM_OBJS) obj/main.o
-	g++ -m64 $^ -o prog.exe
 
-build_tests: obj/buffers_management.o $(ASM_OBJS) obj/tests.o
-	g++ -m64 $^ -Llib -lgtest -lgtest_main -o tests.exe
+build_prog: obj link_prog 
 
-obj/tests.o: tests/tests.cpp
-	g++ -O2 -m64 -Iinclude -c $< -o $@
+link_prog: obj/buffers_management.o $(ASM_OBJS) obj/main.o
+	$(CXX) -m64 $^ -o prog.exe
+
+build_tests: obj link_tests
+
+link_tests: obj/buffers_management.o $(ASM_OBJS) $(TESTS_OBJS)
+	$(CXX) -m64 $^ -Llib -lgtest -lgtest_main -o tests.exe
 
 obj/%.o: src/%.cpp
-	g++ -O2 -m64 -Iinclude -c $< -o $@
+	$(CXX) -O2 -m64 -Iinclude -c $< -o $@
+
+obj/%.o: tests/%.cpp
+	$(CXX) -O2 -m64 -Iinclude -c $< -o $@
 
 obj/%.o: src/%.asm
 	$(ASMC) /Fo $@ /c $<
+
+obj:
+	mkdir obj
 
 .PHONY: prog build_prog tests build_tests clean
 
