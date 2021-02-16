@@ -86,7 +86,7 @@ count_kernel_6x16_loop_head:
     vfmadd231ps    ymm7,   ymm15,  ymm14
     lea    r10,    [r10 + 2 * r11]
     vbroadcastss   ymm12,  dword ptr [r10]
-    vbroadcastss   ymm15,  dword ptr [rax + r11]
+    vbroadcastss   ymm15,  dword ptr [r10 + r11]
     vfmadd231ps    ymm8,   ymm12,  ymm13
     vfmadd231ps    ymm9,   ymm12,  ymm14
     vfmadd231ps    ymm10,  ymm15,  ymm13
@@ -122,6 +122,7 @@ count_kernel_6x16 endp
 ;; Uses RAX                                                                                                           ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 count_kernel_4x16 proc
+    mov    rax,    r10
     vxorps ymm0,   ymm0,   ymm0
     vxorps ymm1,   ymm1,   ymm1
     vxorps ymm2,   ymm2,   ymm2
@@ -134,19 +135,20 @@ count_kernel_4x16_loop_head:
     vbroadcastss   ymm8,   dword ptr [r10]
     vmovaps        ymm9,   [r12]
     vfmadd231ps    ymm0,  ymm8,  ymm9
-    lea    rax,    [r10 + 2 * r11]
+    add    rax,    4
     vmovaps        ymm10,  [r12 + 32]
     vbroadcastss   ymm11,  dword ptr [r10 + r11]
     vfmadd231ps    ymm1,  ymm8,  ymm10
     vfmadd231ps    ymm2,  ymm11, ymm9
     vfmadd231ps    ymm3,  ymm11, ymm10
-    vbroadcastss   ymm8,  dword ptr [rax]
-    vbroadcastss   ymm11, dword ptr [rax + r11]
+    lea    r10,    [r10 + 2 * r11]
+    vbroadcastss   ymm8,  dword ptr [r10]
+    vbroadcastss   ymm11, dword ptr [r10 + r11]
     vfmadd231ps    ymm4,  ymm8,  ymm9
     vfmadd231ps    ymm5,  ymm8,  ymm10
     vfmadd231ps    ymm6,  ymm11, ymm9
     vfmadd231ps    ymm7,  ymm11, ymm10
-    lea    r10,    [r10 + 4]
+    mov    r10,    rax
     add    r12,    64
     sub    esi,    1
     jne    count_kernel_4x16_loop_head
