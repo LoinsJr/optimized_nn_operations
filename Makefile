@@ -5,7 +5,7 @@ TESTS_OBJS = $(patsubst tests/%.cpp, obj/%.o, $(TESTS_SRCS))
 CXX = g++
 ASMC = ml64
 
-build_prog: obj link_prog 
+build_prog: obj link_prog
 
 link_prog: obj/buffers_management.o $(ASM_OBJS) obj/main.o
 	$(CXX) -m64 $^ -o prog.exe

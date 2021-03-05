@@ -18,10 +18,10 @@ float **allocate_float_matricies(int matricies_amount, size_t align, uint32_t si
             ", max = " << MAX_MATRICIES_AMOUNT;
         exit(1);
     }
-    for (int i = 0; i < matricies_amount - 2; ++i) {
+    for (int i = 0; i < matricies_amount - 1; ++i) {
         matricies[i] = (float *)_aligned_malloc(size * sizeof(**matricies), align);
     }
-    if (matricies_amount >= 1) {
+    if (matricies_amount > 0) {
         buffer = (float *)_aligned_malloc(size * sizeof(**matricies), align);
     }
     _matricies_amount = matricies_amount;
@@ -33,7 +33,7 @@ void free_float_matricies()
     for (int i = 0; i < _matricies_amount - 1; ++i) {
         _aligned_free(matricies[i]);
     }
-    if (_matricies_amount >= 1) {
+    if (_matricies_amount > 0) {
         _aligned_free(buffer);
     }
 }
